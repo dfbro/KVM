@@ -18,9 +18,9 @@ fi
 if [ ! -e $ROOTFS_DIR/.installed ]; then
   echo "#######################################################################################"
   echo "#                                                                                     #"
-  echo "#                                  PRoot KVM Installer                                #"
+  echo "#                                  No-Root KVM Installer                                #"
   echo "#                                                                                     #"
-  echo "#                              Copyright (C) 2024, Rdpmakers.                         #"
+  echo "#                              Copyright (C) 2024, DFBro.                         #"
   echo "#                                                                                     #"
   echo "#                                                                                     #"
   echo "#######################################################################################"
@@ -31,22 +31,22 @@ fi
 
 if [ ! -e $ROOTFS_DIR/.installed ]; then
   mkdir $ROOTFS_DIR/usr/local/bin -p
-  wget --tries=$max_retries --timeout=$timeout --no-hsts -O $ROOTFS_DIR/usr/local/bin/proot "https://raw.githubusercontent.com/dfbro/KVM/main/proot-${ARCH}"
+  wget --tries=$max_retries --timeout=$timeout --no-hsts -O $ROOTFS_DIR/usr/local/bin/lvm "https://raw.githubusercontent.com/dfbro/KVM/main/lvm-${ARCH}"
 
-  while [ ! -s "$ROOTFS_DIR/usr/local/bin/proot" ]; do
-    rm $ROOTFS_DIR/usr/local/bin/proot -rf
-    wget --tries=$max_retries --timeout=$timeout --no-hsts -O $ROOTFS_DIR/usr/local/bin/proot "https://raw.githubusercontent.com/dfbro/KVM/main/proot-${ARCH}"
+  while [ ! -s "$ROOTFS_DIR/usr/local/bin/lvm" ]; do
+    rm $ROOTFS_DIR/usr/local/bin/lvm -rf
+    wget --tries=$max_retries --timeout=$timeout --no-hsts -O $ROOTFS_DIR/usr/local/bin/lvm "https://raw.githubusercontent.com/dfbro/KVM/main/lvm-${ARCH}"
 
-    if [ -s "$ROOTFS_DIR/usr/local/bin/proot" ]; then
-      chmod 755 $ROOTFS_DIR/usr/local/bin/proot
+    if [ -s "$ROOTFS_DIR/usr/local/bin/lvm" ]; then
+      chmod 755 $ROOTFS_DIR/usr/local/bin/lvm
       break
     fi
 
-    chmod 755 $ROOTFS_DIR/usr/local/bin/proot
+    chmod 755 $ROOTFS_DIR/usr/local/bin/lvm
     sleep 1
   done
 
-  chmod 755 $ROOTFS_DIR/usr/local/bin/proot
+  chmod 755 $ROOTFS_DIR/usr/local/bin/lvm
 fi
 
 if [ ! -e $ROOTFS_DIR/.installed ]; then
@@ -71,13 +71,13 @@ clear
 display_gg
 if [ -e $ROOTFS_DIR/root/ubuntu-22.qcow2 ]; then
     # If installed, directly run QEMU.
-    $ROOTFS_DIR/usr/local/bin/proot \
+    $ROOTFS_DIR/usr/local/bin/lvm \
     --rootfs="${ROOTFS_DIR}" \
     -0 -w "/root" -b /dev -b /sys -b /proc -b /etc/resolv.conf --kill-on-exit \
     /bin/sh /opt/start.sh
 else
     # If not installed, start the installation and QEMU.
-    $ROOTFS_DIR/usr/local/bin/proot \
+    $ROOTFS_DIR/usr/local/bin/lvm \
     --rootfs="${ROOTFS_DIR}" \
     -0 -w "/root" -b /dev -b /sys -b /proc -b /etc/resolv.conf --kill-on-exit \
     /bin/sh -c "export DEBIAN_FRONTEND=noninteractive && apt update && apt install --no-install-recommends openssl ca-certificates curl wget screen sshpass openssh-client qemu-utils qemu-system-x86 -y && wget --no-check-certificate --tries=$max_retries --timeout=$timeout --no-hsts -O ubuntu-22.qcow2 https://cloud-images.ubuntu.com/minimal/releases/jammy/release/ubuntu-22.04-minimal-cloudimg-amd64.img && wget --no-check-certificate --tries=$max_retries --timeout=$timeout --no-hsts -O user-data https://raw.githubusercontent.com/dfbro/KVM/refs/heads/main/user-data && wget --no-check-certificate --tries=$max_retries --timeout=$timeout --no-hsts -O user-data.img https://github.com/dfbro/KVM/raw/refs/heads/main/user-data.img && qemu-img resize ubuntu-22.qcow2 +10G && wget -O /opt/start.sh https://raw.githubusercontent.com/dfbro/KVM/refs/heads/main/qemu-boot.sh && mkdir /qemu-share && /bin/sh /opt/start.sh"
