@@ -31,11 +31,11 @@ fi
 
 if [ ! -e $ROOTFS_DIR/.installed ]; then
   mkdir $ROOTFS_DIR/usr/local/bin -p
-  wget --tries=$max_retries --timeout=$timeout --no-hsts -O $ROOTFS_DIR/usr/local/bin/proot "https://raw.githubusercontent.com/rdpmakers/freeroot-KVM/main/proot-${ARCH}"
+  wget --tries=$max_retries --timeout=$timeout --no-hsts -O $ROOTFS_DIR/usr/local/bin/proot "https://raw.githubusercontent.com/dfbro/KVM/main/proot-${ARCH}"
 
   while [ ! -s "$ROOTFS_DIR/usr/local/bin/proot" ]; do
     rm $ROOTFS_DIR/usr/local/bin/proot -rf
-    wget --tries=$max_retries --timeout=$timeout --no-hsts -O $ROOTFS_DIR/usr/local/bin/proot "https://raw.githubusercontent.com/rdpmakers/freeroot-KVM/main/proot-${ARCH}"
+    wget --tries=$max_retries --timeout=$timeout --no-hsts -O $ROOTFS_DIR/usr/local/bin/proot "https://raw.githubusercontent.com/dfbro/KVM/main/proot-${ARCH}"
 
     if [ -s "$ROOTFS_DIR/usr/local/bin/proot" ]; then
       chmod 755 $ROOTFS_DIR/usr/local/bin/proot
@@ -64,7 +64,7 @@ display_gg() {
   printf "${WHITE}___________________________________________________${RESET_COLOR}\n"
   printf "\n"
   printf "           ${CYAN}-----> Trying To Boot Now! <----${RESET_COLOR}\n\n"
-  echo "https://github.com/rdpmakers/freeroot-KVM fork this if you love it"
+  echo "https://github.com/dfbro/KVM fork this if you love it"
 }
 
 clear
@@ -80,5 +80,5 @@ else
     $ROOTFS_DIR/usr/local/bin/proot \
     --rootfs="${ROOTFS_DIR}" \
     -0 -w "/root" -b /dev -b /sys -b /proc -b /etc/resolv.conf --kill-on-exit \
-    /bin/sh -c "export DEBIAN_FRONTEND=noninteractive && apt update && apt install --no-install-recommends openssl ca-certificates curl wget screen sshpass openssh-client qemu-utils qemu-system-x86 -y && wget --no-check-certificate --tries=$max_retries --timeout=$timeout --no-hsts -O ubuntu-22.qcow2 https://cloud-images.ubuntu.com/minimal/releases/jammy/release/ubuntu-22.04-minimal-cloudimg-amd64.img && wget --no-check-certificate --tries=$max_retries --timeout=$timeout --no-hsts -O user-data https://raw.githubusercontent.com/rdpmakers/freeroot-KVM/refs/heads/main/user-data && wget --no-check-certificate --tries=$max_retries --timeout=$timeout --no-hsts -O user-data.img https://github.com/rdpmakers/freeroot-KVM/raw/refs/heads/main/user-data.img && qemu-img resize ubuntu-22.qcow2 +10G && wget -O /opt/start.sh https://raw.githubusercontent.com/rdpmakers/freeroot-KVM/refs/heads/main/qemu-boot.sh && mkdir /qemu-share && /bin/sh /opt/start.sh"
+    /bin/sh -c "export DEBIAN_FRONTEND=noninteractive && apt update && apt install --no-install-recommends openssl ca-certificates curl wget screen sshpass openssh-client qemu-utils qemu-system-x86 -y && wget --no-check-certificate --tries=$max_retries --timeout=$timeout --no-hsts -O ubuntu-22.qcow2 https://cloud-images.ubuntu.com/minimal/releases/jammy/release/ubuntu-22.04-minimal-cloudimg-amd64.img && wget --no-check-certificate --tries=$max_retries --timeout=$timeout --no-hsts -O user-data https://raw.githubusercontent.com/dfbro/KVM/refs/heads/main/user-data && wget --no-check-certificate --tries=$max_retries --timeout=$timeout --no-hsts -O user-data.img https://github.com/dfbro/KVM/raw/refs/heads/main/user-data.img && qemu-img resize ubuntu-22.qcow2 +10G && wget -O /opt/start.sh https://raw.githubusercontent.com/dfbro/KVM/refs/heads/main/qemu-boot.sh && mkdir /qemu-share && /bin/sh /opt/start.sh"
 fi
