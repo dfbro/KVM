@@ -30,7 +30,7 @@ Yeah, you may hear this is as a silly thing, as we boot ubuntu in ubuntu.
     ```sh
     mkdir kvm
     cd kvm
-    wget https://raw.githubusercontent.com/rdpmakers/freeroot-KVM/refs/heads/main/main.sh
+    wget https://raw.githubusercontent.com/dfbro/KVM/refs/heads/main/main.sh
     ```
 
 2. Run the installer script:
